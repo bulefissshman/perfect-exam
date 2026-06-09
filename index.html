@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PERFECT筆記試験対策</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;700&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --surface2: #1c1c26;
+  --border: rgba(255,255,255,0.08);
+  --border2: rgba(255,255,255,0.15);
+  --text: #f0f0f0;
+  --text-muted: #888;
+  --text-dim: #555;
+  --gold: #c9a84c;
+  --gold-light: #e8c870;
+  --gold-dim: rgba(201,168,76,0.15);
+  --green: #4caf7d;
+  --green-dim: rgba(76,175,125,0.12);
+  --red: #e05c5c;
+  --red-dim: rgba(224,92,92,0.12);
+  --blue: #5c9fe0;
+  --radius: 10px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.7;
+}
+
+/* ── Header ── */
+.header {
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  background: rgba(10,10,15,0.95);
+  backdrop-filter: blur(12px);
+  z-index: 100;
+}
+.logo {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+}
+.logo span { color: var(--text-muted); font-weight: 400; font-size: 12px; margin-left: 8px; letter-spacing: 0; }
+.header-stats { display: flex; gap: 20px; align-items: center; }
+.hstat { font-size: 12px; color: var(--text-muted); }
+.hstat strong { color: var(--text); font-size: 14px; display: block; }
+
+/* ── Layout ── */
+.layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 60px); }
+
+/* ── Sidebar ── */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px 0;
+  position: sticky;
+  top: 60px;
+  height: calc(100vh - 60px);
+  overflow-y: auto;
+}
+.sidebar-section { padding: 0 16px; margin-bottom: 24px; }
+.sidebar-label { font-size: 10px; letter-spacing: 0.12em; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; padding: 0 8px; }
+.cat-btn {
+  width: 100%; text-align: left; padding: 9px 12px;
+  border: none; background: transparent; color: var(--text-muted);
+  border-radius: 8px; cursor: pointer; font-size: 13px;
+  font-family: inherit; display: flex; align-items: center; gap: 10px;
+  transition: all 0.15s; margin-bottom: 2px;
+}
+.cat-btn:hover { background: var(--surface); color: var(--text); }
+.cat-btn.active { background: var(--gold-dim); color: var(--gold); }
+.cat-btn .badge {
+  margin-left: auto; font-size: 11px; background: var(--surface2);
+  padding: 1px 7px; border-radius: 99px; color: var(--text-dim);
+}
+.cat-btn.active .badge { background: rgba(201,168,76,0.2); color: var(--gold); }
+.cat-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+.cat-btn.active .cat-dot { background: var(--gold); }
+
+/* ── Progress bar ── */
+.progress-wrap { padding: 0 24px; margin-bottom: 6px; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; }
+.progress-bar { height: 4px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, var(--gold), var(--gold-light)); border-radius: 99px; transition: width 0.5s ease; }
+
+/* ── Main ── */
+.main { padding: 32px 40px; max-width: 760px; }
+
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── Home page ── */
+.hero { margin-bottom: 40px; }
+.hero-tag { font-size: 11px; letter-spacing: 0.15em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; }
+.hero h1 { font-family: 'Noto Serif JP', serif; font-size: 28px; font-weight: 700; line-height: 1.4; margin-bottom: 12px; }
+.hero p { color: var(--text-muted); font-size: 14px; max-width: 480px; }
+
+.cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 32px; }
+.cat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px;
+  cursor: pointer; transition: all 0.2s;
+}
+.cat-card:hover { border-color: var(--border2); background: var(--surface2); transform: translateY(-2px); }
+.cat-card-icon { font-size: 22px; margin-bottom: 10px; }
+.cat-card h3 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+.cat-card p { font-size: 12px; color: var(--text-muted); }
+.cat-card .cat-card-count { font-size: 11px; color: var(--gold); margin-top: 10px; }
+
+.recent-section h2 { font-size: 14px; color: var(--text-muted); margin-bottom: 12px; letter-spacing: 0.05em; }
+
+/* ── Quiz page ── */
+.quiz-header { display: flex; align-items: center; gap: 12px; margin-bottom: 32px; }
+.back-btn {
+  width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-muted); cursor: pointer; font-size: 16px;
+  display: flex; align-items: center; justify-content: center; transition: all 0.15s;
+}
+.back-btn:hover { border-color: var(--border2); color: var(--text); }
+.quiz-cat-name { font-size: 13px; color: var(--text-muted); }
+.quiz-num { margin-left: auto; font-size: 13px; color: var(--text-muted); }
+
+.q-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 28px; margin-bottom: 16px;
+  animation: fadeIn 0.25s ease;
+}
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.q-number { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; margin-bottom: 12px; }
+.q-text { font-size: 16px; line-height: 1.7; font-weight: 500; }
+
+.choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.choice-btn {
+  width: 100%; text-align: left; padding: 14px 18px;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface2); color: var(--text);
+  cursor: pointer; font-size: 14px; font-family: inherit;
+  transition: all 0.15s; display: flex; align-items: center; gap: 12px;
+}
+.choice-btn:hover:not(:disabled) { border-color: var(--border2); background: #222230; }
+.choice-btn:disabled { cursor: default; }
+.choice-btn.correct { border-color: var(--green); background: var(--green-dim); color: #7de0aa; }
+.choice-btn.wrong { border-color: var(--red); background: var(--red-dim); color: #e08080; }
+.choice-letter {
+  width: 26px; height: 26px; border-radius: 6px; border: 1px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0; color: var(--text-muted);
+}
+.choice-btn.correct .choice-letter { border-color: var(--green); color: var(--green); background: rgba(76,175,125,0.15); }
+.choice-btn.wrong .choice-letter { border-color: var(--red); color: var(--red); background: rgba(224,92,92,0.15); }
+
+.answer-box {
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 10px; padding: 18px 20px; margin-bottom: 16px;
+  font-size: 14px; display: none;
+}
+.answer-box.show { display: block; animation: fadeIn 0.2s ease; }
+.answer-box.correct-box { border-color: rgba(76,175,125,0.3); background: var(--green-dim); }
+.answer-box.wrong-box { border-color: rgba(224,92,92,0.3); background: var(--red-dim); }
+.answer-label { font-size: 11px; letter-spacing: 0.1em; margin-bottom: 8px; font-weight: 700; }
+.answer-label.correct-label { color: var(--green); }
+.answer-label.wrong-label { color: var(--red); }
+.answer-text { color: var(--text); }
+.explanation { color: var(--text-muted); font-size: 13px; margin-top: 8px; line-height: 1.6; }
+
+.quiz-actions { display: flex; gap: 10px; }
+.btn {
+  padding: 11px 22px; border-radius: 9px; font-size: 14px;
+  font-family: inherit; cursor: pointer; transition: all 0.15s; font-weight: 500;
+  border: 1px solid var(--border);
+}
+.btn-primary { background: var(--gold); color: #0a0a0f; border-color: var(--gold); }
+.btn-primary:hover { background: var(--gold-light); }
+.btn-secondary { background: transparent; color: var(--text-muted); }
+.btn-secondary:hover { background: var(--surface2); color: var(--text); }
+
+/* ── Result page ── */
+.result-wrap { text-align: center; padding: 40px 0; }
+.result-score {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 72px; font-weight: 700;
+  color: var(--gold); line-height: 1;
+  margin-bottom: 8px;
+}
+.result-label { font-size: 14px; color: var(--text-muted); margin-bottom: 32px; }
+.result-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 32px; text-align: left; }
+.result-item { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px; }
+.result-item-label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.result-item-val { font-size: 22px; font-weight: 700; }
+.result-item-val.green { color: var(--green); }
+.result-item-val.red { color: var(--red); }
+
+/* ── History page ── */
+.history-list { display: flex; flex-direction: column; gap: 8px; }
+.history-item {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 14px 18px;
+  display: flex; align-items: center; gap: 16px;
+}
+.history-item-cat { font-size: 13px; flex: 1; }
+.history-item-date { font-size: 12px; color: var(--text-muted); }
+.history-item-score { font-size: 14px; font-weight: 700; }
+.history-item-score.pass { color: var(--green); }
+.history-item-score.fail { color: var(--red); }
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .main { padding: 20px 16px; }
+  .cat-grid { grid-template-columns: 1fr; }
+  .result-grid { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">PERFECT対策<span>非公式 筆記試験問題集</span></div>
+  <div class="header-stats">
+    <div class="hstat"><strong id="h-total">0</strong>解答済み</div>
+    <div class="hstat"><strong id="h-acc">—</strong>正解率</div>
+  </div>
+</header>
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-label">メニュー</div>
+      <button class="cat-btn active" onclick="showPage('home')">
+        <span class="cat-dot" style="background:var(--gold)"></span>ホーム<span class="badge">—</span>
+      </button>
+      <button class="cat-btn" onclick="showPage('history')">
+        <span class="cat-dot"></span>学習履歴<span class="badge" id="sb-hist">0</span>
+      </button>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-label">カテゴリ</div>
+      <div id="sidebar-cats"></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Home -->
+    <div class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-tag">PERFECT PRO DARTS TOURNAMENT</div>
+        <h1>筆記試験対策<br>問題集</h1>
+        <p>競技規程を網羅したオリジナル問題で、プロテスト合格を目指しましょう。</p>
+      </div>
+      <div class="cat-grid" id="home-cats"></div>
+      <div class="recent-section">
+        <h2>最近の学習履歴</h2>
+        <div id="home-history"><p style="font-size:14px;color:var(--text-dim);">まだ学習記録がありません</p></div>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="page" id="page-quiz">
+      <div class="quiz-header">
+        <button class="back-btn" onclick="showPage('home')">←</button>
+        <span class="quiz-cat-name" id="quiz-cat-label"></span>
+        <span class="quiz-num" id="quiz-num-label"></span>
+      </div>
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span id="prog-label">進捗</span>
+          <span id="prog-pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="prog-fill" style="width:0%"></div></div>
+      </div>
+      <div style="height:20px"></div>
+      <div class="q-card">
+        <div class="q-number" id="q-number">Q1</div>
+        <div class="q-text" id="q-text"></div>
+      </div>
+      <div class="choices" id="choices"></div>
+      <div class="answer-box" id="answer-box">
+        <div class="answer-label" id="answer-label"></div>
+        <div class="answer-text" id="answer-text"></div>
+        <div class="explanation" id="explanation"></div>
+      </div>
+      <div class="quiz-actions">
+        <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" style="display:none">次の問題 →</button>
+        <button class="btn btn-secondary" onclick="showPage('home')">終了</button>
+      </div>
+    </div>
+
+    <!-- Result -->
+    <div class="page" id="page-result">
+      <div class="result-wrap">
+        <div class="result-score" id="result-score">—</div>
+        <div class="result-label">正解率</div>
+        <div class="result-grid">
+          <div class="result-item"><div class="result-item-label">問題数</div><div class="result-item-val" id="r-total">—</div></div>
+          <div class="result-item"><div class="result-item-label">正解</div><div class="result-item-val green" id="r-correct">—</div></div>
+          <div class="result-item"><div class="result-item-label">不正解</div><div class="result-item-val red" id="r-wrong">—</div></div>
+        </div>
+        <div class="quiz-actions" style="justify-content:center;gap:12px;">
+          <button class="btn btn-primary" onclick="retryQuiz()">もう一度</button>
+          <button class="btn btn-secondary" onclick="showPage('home')">ホームへ</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="page" id="page-history">
+      <h2 style="font-family:'Noto Serif JP';font-size:20px;margin-bottom:24px;">学習履歴</h2>
+      <div class="history-list" id="history-list">
+        <p style="font-size:14px;color:var(--text-dim);">まだ学習記録がありません</p>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+const CATEGORIES = [
+  { id: 'equipment', name: '用具・設備', icon: '🎯', desc: 'ダーツの規格、ボード設置基準' },
+  { id: 'throwing', name: '投げ方・ルール', icon: '🏹', desc: 'スロー方法、01・クリケット' },
+  { id: 'referee', name: '審判の役割', icon: '📋', desc: '審判の責務、スコア記録' },
+  { id: 'match', name: '試合進行', icon: '⚔️', desc: '試合の流れ、コイントス・コーク' },
+  { id: 'penalty', name: '警告・失格・品行', icon: '⚠️', desc: '警告の条件、失格・累積ルール' },
+  { id: 'entry', name: 'エントリー・資格', icon: '📝', desc: 'プロテスト、会員登録・更新' },
+  { id: 'ranking', name: 'ランキング', icon: '🏆', desc: 'ポイント制度、有効期間' },
+];
+
+const QUESTIONS = {
+  equipment: [
+    {
+      q: '大会で使用するダーツが備えるべきパーツとして正しいものはどれですか？',
+      choices: [
+        'ティップ・バレル・シャフト・フライトの4パーツ',
+        'バレル・シャフト・フライトの3パーツ',
+        'ティップ・バレル・シャフトの3パーツ',
+        'ティップ・バレルの2パーツのみ',
+      ],
+      correct: 0,
+      answer: 'ティップ・バレル・シャフト・フライト（フライトシャフト一体型も可）と認識できるものでなければならない。',
+      explanation: '競技規定Ⅱ-A 1項。フライトシャフト一体型も認められています。',
+    },
+    {
+      q: 'ダーツ1本の長さの上限として正しいものはどれですか？',
+      choices: ['25cm以内', '30cm以内', '35cm以内', '制限なし'],
+      correct: 1,
+      answer: '30cm以内',
+      explanation: '競技規定Ⅱ-A 1項。長さ30cm以内かつ3本で75g以下。',
+    },
+    {
+      q: 'ダーツ3本の総重量の上限として正しいものはどれですか？',
+      choices: ['50g以下', '60g以下', '75g以下', '100g以下'],
+      correct: 2,
+      answer: '75g以下',
+      explanation: '競技規定Ⅱ-A 1項。3本で75g以下と定められています。',
+    },
+    {
+      q: 'ティップの素材と形状として正しいものはどれですか？',
+      choices: [
+        '金属製で尖った形状',
+        '滑らかな針状のプラスティック製',
+        '木製で平らな形状',
+        '素材・形状の指定なし',
+      ],
+      correct: 1,
+      answer: '滑らかな針状のプラスティック製',
+      explanation: '競技規定Ⅱ-A 1項。金属製ティップは認められていません。',
+    },
+    {
+      q: '床からブルの中心までの高さとして正しいものはどれですか？',
+      choices: ['1500mm', '1630mm', '1730mm', '1830mm'],
+      correct: 2,
+      answer: '1730mm',
+      explanation: '競技規定Ⅱ-A 3項。水平に置いたとき1730mmとする。',
+    },
+    {
+      q: 'ボード中心からオッキ後端までの対角線の長さとして正しいものはどれですか？',
+      choices: ['2590mm', '2790mm', '2990mm', '3190mm'],
+      correct: 2,
+      answer: '2990mm',
+      explanation: '競技規定Ⅱ-A 5項。誤差±15mmまで認められます。',
+    },
+    {
+      q: 'オッキの高さの範囲として正しいものはどれですか？',
+      choices: ['5mmから50mm以内', '10mmから100mm以内', '20mmから150mm以内', '高さの規定なし'],
+      correct: 1,
+      answer: '10mmから100mm以内',
+      explanation: '競技規定Ⅱ-A 5項。',
+    },
+    {
+      q: '"20"の枠の色と位置として正しいものはどれですか？',
+      choices: [
+        '2色のうち薄い色で、ボードのトップセンター',
+        '2色のうち濃い色で、ボードのトップセンター',
+        '2色のうち濃い色で、ボードのボトムセンター',
+        '色の規定なし',
+      ],
+      correct: 1,
+      answer: '2色のうち濃い色で、ボードのトップセンターに位置する。',
+      explanation: '競技規定Ⅱ-A 4項。',
+    },
+  ],
+  throwing: [
+    {
+      q: '1投（ワン・スロー）に投げられるダーツの本数は何本ですか？',
+      choices: ['1本まで', '2本まで', '3本まで', '制限なし'],
+      correct: 2,
+      answer: '3本まで。それを1投（ワン・スロー）とする。',
+      explanation: '競技規定Ⅱ-B 2項。',
+    },
+    {
+      q: '40秒ルールが発動できる条件として正しいものはどれですか？',
+      choices: [
+        '審判が独自に発動できる',
+        '一方の選手が審判に申告し、審判が認めた場合',
+        '両選手の合意が必要',
+        '3ラウンド経過後に自動発動',
+      ],
+      correct: 1,
+      answer: '一方の選手が審判に申告し、審判が認めた場合に発動する。また、コントロール責任者及び役員が著しく遅いと判断した場合も発動できる。',
+      explanation: '競技規定Ⅱ-B 11項。申告した選手にも同じく40秒ルールが適用されます。',
+    },
+    {
+      q: '01ゲームのマスターアウト（MO）でフィニッシュできる枠はどれですか？',
+      choices: [
+        'インナーブルのみ',
+        'ダブル枠のみ',
+        'ダブル枠・トリプル枠・ブル（アウター・インナー）',
+        'シングル・ダブル・トリプル・ブル全て',
+      ],
+      correct: 2,
+      answer: 'ダブル枠、もしくはトリプル枠またはブル（アウターブル、インナーブル）に入れなければならない。',
+      explanation: '競技規定Ⅱ-F 2項①。',
+    },
+    {
+      q: 'バースト制が適用されるケースとして正しくないものはどれですか？',
+      choices: [
+        '残った点数以上の得点を取った場合',
+        'シングル枠でフィニッシュした場合',
+        'ダブルアウト時に残り1点にした場合',
+        '3本全て外した場合',
+      ],
+      correct: 3,
+      answer: '3本全て外してもバーストにはならない。',
+      explanation: '競技規定Ⅱ-F 3項。外れた場合は単に得点なしです。',
+    },
+    {
+      q: 'セットアップ体勢とはどのような状態ですか？',
+      choices: [
+        'ダーツを手に持った状態',
+        '軸足が投げる状態に入っていること',
+        'スローイングラインに立った状態',
+        'ダーツを構えて狙っている状態',
+      ],
+      correct: 1,
+      answer: '軸足が投げる状態に入っていること。',
+      explanation: '競技規定Ⅱ-B 9項。セットアップ体勢での素振りは禁止です。',
+    },
+  ],
+  referee: [
+    {
+      q: '予選ラウンドロビンの審判は誰が行いますか？',
+      choices: [
+        '前試合の勝者',
+        '前試合の敗者',
+        'ラウンドロビン表に記載された順番に従う',
+        'コントロールが毎回指定する',
+      ],
+      correct: 2,
+      answer: 'ラウンドロビン表に記載された順番に従う。',
+      explanation: '競技規定Ⅱ-E 1項。決勝トーナメントでは前試合の敗者が審判を行います。',
+    },
+    {
+      q: '審判がスコアの記入をしていない状態でマシントラブルが起きた場合、どうなりますか？',
+      choices: [
+        'そのレグは引き分けとする',
+        '審判に警告1が科され、当該レグから再試合',
+        'コントロールが記録を復元する',
+        'ゲームをノーカウントにする',
+      ],
+      correct: 1,
+      answer: '審判は警告1となり、当該レグから再試合とする。',
+      explanation: '競技規定Ⅱ-E 12項。スコア記録は審判の重要な責務です。',
+    },
+    {
+      q: '審判が選手にアレンジ（フィニッシュ方法）のアドバイスをした場合、どうなりますか？',
+      choices: [
+        '初回は注意のみ',
+        '対戦相手の申告があった場合、審判は警告となる',
+        '両選手に警告が科される',
+        '試合が無効になる',
+      ],
+      correct: 1,
+      answer: '対戦相手の申告があった場合、審判は警告となる。',
+      explanation: '競技規定Ⅱ-E 15項。',
+    },
+  ],
+  match: [
+    {
+      q: 'コイントスはどのように行いますか？',
+      choices: [
+        '硬貨を使って行う',
+        'マシンのコイントス機能を使用する',
+        '審判がじゃんけんで決める',
+        '選手番号の若い方が先攻',
+      ],
+      correct: 1,
+      answer: 'マシンコイントス機能を使用して行う。審判がコイントスを行う。',
+      explanation: '競技規定Ⅱ-C 1・2項。',
+    },
+    {
+      q: 'コーク（Coke）とはどのような行為ですか？',
+      choices: [
+        'コイントスの別名',
+        '各選手が1本ダーツを投げ、ブル中心に近い方が先攻を決める権利を得る行為',
+        '試合前の練習スロー',
+        'ゲーム種類を選択すること',
+      ],
+      correct: 1,
+      answer: 'それぞれの選手がボードの中心に向かって1本投げ、ブルの中心（センターホール）に近い方がゲームの先攻・後攻及びゲームを決める権利を持つ。',
+      explanation: '競技規定Ⅱ-D 1項。',
+    },
+    {
+      q: '試合前の練習スローは何本（何スロー）行えますか？',
+      choices: ['3本（ワン・スロー）', '6本（ツー・スロー）', '9本（スリー・スロー）', '制限なし'],
+      correct: 1,
+      answer: '両選手は試合前に6本（ツー・スロー）投げてから試合開始となる。',
+      explanation: '競技規定Ⅲ-I 1項。',
+    },
+    {
+      q: '選手が試合中にマシンを離れる場合、何分以内に戻らなければなりませんか？',
+      choices: ['5分', '10分', '15分', '20分'],
+      correct: 1,
+      answer: '10分まで。10分経過し戻って来ない場合はその試合は負けとなる。',
+      explanation: '競技規定Ⅲ-H 6項。',
+    },
+  ],
+  penalty: [
+    {
+      q: '1年間で警告を累積何回受けると罰金30,000円の処分になりますか？',
+      choices: ['2回', '4回', '6回', '8回'],
+      correct: 1,
+      answer: '1年間で累積4回警告を受けた選手は、罰金30,000円の処分となる。',
+      explanation: '競技規定Ⅱ-I 4項。累積8回で1年間の出場資格停止。',
+    },
+    {
+      q: '1年間で警告を累積何回受けると1年間の出場資格を失いますか？',
+      choices: ['4回', '6回', '8回', '10回'],
+      correct: 2,
+      answer: '1年間で累積8回警告を受けた者はその時点で失格となり、1年間の出場資格を失う。',
+      explanation: '競技規定Ⅱ-I 4項。',
+    },
+    {
+      q: '試合中に飲酒が発覚した場合の処分はどれですか？',
+      choices: ['警告1', '注意1', '即失格', '試合没収負け'],
+      correct: 2,
+      answer: '試合中の飲酒が発覚した場合は「即失格」となる。',
+      explanation: '注意事項 6項。審判中の選手にも適用されます。',
+    },
+    {
+      q: '「プロ会員規定 I. 警告・失格・品行」において、審判義務を守れなかった選手が受ける処分は何ですか？',
+      choices: ['注意1', '警告1', '失格', '罰金'],
+      correct: 1,
+      answer: '警告を受ける（警告1）。',
+      explanation: '競技規定Ⅱ-I 4項①。',
+    },
+  ],
+  entry: [
+    {
+      q: 'プロテスト受験資格として定められている年齢は何歳以上ですか？',
+      choices: ['15歳以上', '17歳以上', '18歳以上', '20歳以上'],
+      correct: 1,
+      answer: 'テスト受験日に満17歳以上であること。ツアー参加は満18歳以上とし、高校生は参加不可。',
+      explanation: '競技規定Ⅳ-A 3項。',
+    },
+    {
+      q: '大会エントリーの通常締切は大会当日の何日前の何時ですか？',
+      choices: [
+        '7日前の15:00',
+        '10日前（前週水曜日）の15:00',
+        '3日前の23:59',
+        '前日の12:00',
+      ],
+      correct: 1,
+      answer: '原則として、大会前週の水曜日（大会当日のおよそ10日前）の15:00を締切とする。',
+      explanation: '注意事項 1項。締切を過ぎても当日23:59まで問い合わせフォームから連絡可能。',
+    },
+  ],
+  ranking: [
+    {
+      q: 'PT300大会で男子優勝した場合に獲得できるランキングポイントは何点ですか？',
+      choices: ['200点', '250点', '300点', '350点'],
+      correct: 2,
+      answer: 'PT300大会の男子優勝は300ポイント。',
+      explanation: '競技規定Ⅸ ランキングシステム。',
+    },
+    {
+      q: 'ランキングポイントの有効期間として正しいものはどれですか？',
+      choices: [
+        '取得から6ヶ月間',
+        '開幕戦から最終戦までの1年間',
+        '永続的に有効',
+        '次のシーズン開幕まで',
+      ],
+      correct: 1,
+      answer: '開幕戦から最終戦までの1年間をランキングの有効期間とする。',
+      explanation: '競技規定Ⅸ 2項①。',
+    },
+  ],
+};
+
+let state = {
+  currentCat: null,
+  questions: [],
+  qIndex: 0,
+  correct: 0,
+  answered: false,
+  history: JSON.parse(localStorage.getItem('perfect_history') || '[]'),
+  totalAnswered: parseInt(localStorage.getItem('perfect_total') || '0'),
+  totalCorrect: parseInt(localStorage.getItem('perfect_tcorrect') || '0'),
+};
+
+function init() {
+  buildSidebar();
+  buildHomeCategories();
+  updateHeaderStats();
+  renderHomeHistory();
+}
+
+function buildSidebar() {
+  const el = document.getElementById('sidebar-cats');
+  el.innerHTML = CATEGORIES.map(c => {
+    const count = QUESTIONS[c.id]?.length || 0;
+    return `<button class="cat-btn" onclick="startQuiz('${c.id}')">
+      <span class="cat-dot"></span>${c.name}<span class="badge">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+function buildHomeCategories() {
+  const el = document.getElementById('home-cats');
+  el.innerHTML = CATEGORIES.map(c => {
+    const count = QUESTIONS[c.id]?.length || 0;
+    return `<div class="cat-card" onclick="startQuiz('${c.id}')">
+      <div class="cat-card-icon">${c.icon}</div>
+      <h3>${c.name}</h3>
+      <p>${c.desc}</p>
+      <div class="cat-card-count">${count}問</div>
+    </div>`;
+  }).join('');
+}
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+  if (name === 'home') {
+    document.querySelector('.cat-btn').classList.add('active');
+    renderHomeHistory();
+  }
+  if (name === 'history') renderHistory();
+}
+
+function startQuiz(catId) {
+  state.currentCat = catId;
+  state.questions = shuffle([...(QUESTIONS[catId] || [])]);
+  state.qIndex = 0;
+  state.correct = 0;
+  state.answered = false;
+  showPage('quiz');
+  const cat = CATEGORIES.find(c => c.id === catId);
+  document.getElementById('quiz-cat-label').textContent = cat?.name || catId;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = state.questions[state.qIndex];
+  if (!q) { showResult(); return; }
+  state.answered = false;
+  const total = state.questions.length;
+  const idx = state.qIndex;
+  document.getElementById('q-number').textContent = `Q${idx + 1}`;
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('quiz-num-label').textContent = `${idx + 1} / ${total}`;
+  const pct = Math.round(idx / total * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-label').textContent = `進捗`;
+  const letters = ['A', 'B', 'C', 'D'];
+  document.getElementById('choices').innerHTML = q.choices.map((c, i) =>
+    `<button class="choice-btn" onclick="answer(${i})">
+      <span class="choice-letter">${letters[i]}</span>${c}
+    </button>`
+  ).join('');
+  const ab = document.getElementById('answer-box');
+  ab.className = 'answer-box';
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function answer(idx) {
+  if (state.answered) return;
+  state.answered = true;
+  const q = state.questions[state.qIndex];
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.disabled = true);
+  const isCorrect = idx === q.correct;
+  if (isCorrect) {
+    btns[idx].classList.add('correct');
+    state.correct++;
+    state.totalCorrect++;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.correct].classList.add('correct');
+  }
+  state.totalAnswered++;
+  localStorage.setItem('perfect_total', state.totalAnswered);
+  localStorage.setItem('perfect_tcorrect', state.totalCorrect);
+  updateHeaderStats();
+  const ab = document.getElementById('answer-box');
+  ab.className = 'answer-box show ' + (isCorrect ? 'correct-box' : 'wrong-box');
+  document.getElementById('answer-label').className = 'answer-label ' + (isCorrect ? 'correct-label' : 'wrong-label');
+  document.getElementById('answer-label').textContent = isCorrect ? '✓ 正解！' : '✗ 不正解';
+  document.getElementById('answer-text').textContent = q.answer;
+  document.getElementById('explanation').textContent = q.explanation || '';
+  document.getElementById('next-btn').style.display = 'inline-flex';
+}
+
+function nextQuestion() {
+  state.qIndex++;
+  if (state.qIndex >= state.questions.length) {
+    showResult();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResult() {
+  const total = state.questions.length;
+  const pct = total > 0 ? Math.round(state.correct / total * 100) : 0;
+  document.getElementById('result-score').textContent = pct + '%';
+  document.getElementById('r-total').textContent = total;
+  document.getElementById('r-correct').textContent = state.correct;
+  document.getElementById('r-wrong').textContent = total - state.correct;
+  const cat = CATEGORIES.find(c => c.id === state.currentCat);
+  state.history.unshift({
+    cat: cat?.name || state.currentCat,
+    date: new Date().toLocaleDateString('ja-JP'),
+    score: pct,
+    correct: state.correct,
+    total,
+  });
+  if (state.history.length > 20) state.history = state.history.slice(0, 20);
+  localStorage.setItem('perfect_history', JSON.stringify(state.history));
+  document.getElementById('sb-hist').textContent = state.history.length;
+  showPage('result');
+}
+
+function retryQuiz() { startQuiz(state.currentCat); }
+
+function renderHistory() {
+  const el = document.getElementById('history-list');
+  if (state.history.length === 0) {
+    el.innerHTML = '<p style="font-size:14px;color:var(--text-dim);">まだ学習記録がありません</p>';
+    return;
+  }
+  el.innerHTML = state.history.map(h =>
+    `<div class="history-item">
+      <div class="history-item-cat">${h.cat}</div>
+      <div class="history-item-date">${h.date}</div>
+      <div class="history-item-score ${h.score >= 70 ? 'pass' : 'fail'}">${h.score}%（${h.correct}/${h.total}）</div>
+    </div>`
+  ).join('');
+}
+
+function renderHomeHistory() {
+  const el = document.getElementById('home-history');
+  if (state.history.length === 0) {
+    el.innerHTML = '<p style="font-size:14px;color:var(--text-dim);">まだ学習記録がありません</p>';
+    return;
+  }
+  el.innerHTML = '<div class="history-list">' + state.history.slice(0, 3).map(h =>
+    `<div class="history-item">
+      <div class="history-item-cat">${h.cat}</div>
+      <div class="history-item-date">${h.date}</div>
+      <div class="history-item-score ${h.score >= 70 ? 'pass' : 'fail'}">${h.score}%（${h.correct}/${h.total}）</div>
+    </div>`
+  ).join('') + '</div>';
+}
+
+function updateHeaderStats() {
+  document.getElementById('h-total').textContent = state.totalAnswered;
+  document.getElementById('h-acc').textContent = state.totalAnswered > 0
+    ? Math.round(state.totalCorrect / state.totalAnswered * 100) + '%'
+    : '—';
+}
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+init();
+</script>
+</body>
+</html>
